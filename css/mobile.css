@@ -1,0 +1,602 @@
+/* ==========================================================================
+   JG Marketing — camada do celular (css/mobile.css)
+   Carregado com media="screen and (max-width:720px)": no desktop, no tablet
+   e na impressão nada daqui se aplica. Constrói sobre style.css e
+   efeitos.css sem mudar conteúdo; apagar este arquivo, js/mobile.js e as
+   duas linhas que os chamam devolve o celular ao estado da spec 004.
+   Ver specs/005-mobile-design/spec.md.
+
+   Ordem: 1 base · 2 faixas em folha · 3 cabeçalho · 4 menu em folha ·
+          5 barra de abas · 6 topo · 7 números · 8 case · 9 marcas ·
+          10 perfil · 11 trajetória · 12 serviços · 13 processo ·
+          14 pacotes · 15 diagnóstico · 16 perguntas · 17 contato ·
+          18 rodapé · 19 janelas em folha · 20 toque · 21 movimento
+   ========================================================================== */
+
+/* ---------- 1. Base -------------------------------------------------------- */
+:root{--gutter:20px;--band:58px}
+html{-webkit-tap-highlight-color:transparent}
+.d2{font-size:clamp(1.9rem,8.6vw,2.35rem);max-width:none;line-height:.96}
+.d3{font-size:clamp(1.25rem,5.8vw,1.5rem);max-width:none}
+.head{gap:14px;margin-bottom:26px}
+.slug{margin-bottom:14px}
+.copy{font-size:.95rem;line-height:1.68}
+.lead{font-size:.95rem}
+
+/* ---------- 2. Faixas em folha ----------------------------------------------
+   Cada capítulo sobe por cima do anterior com cantos arredondados, como
+   cartões empilhados de um app. O corte fica visível na troca de cor. */
+main > .band:not(#numeros),.foot{
+  position:relative;z-index:1;
+  margin-top:calc(var(--m-r) * -1.5);
+  border-radius:calc(var(--m-r) * 1.5) calc(var(--m-r) * 1.5) 0 0;
+  border-top:1px solid var(--rule);
+  box-shadow:0 -22px 40px -28px rgba(0,0,0,.9);
+}
+.band--paper{border-top-color:rgba(255,255,255,.5)}
+/* o primeiro bloco depois de cada corte desconta o arredondado */
+main > .band:not(#numeros){padding-top:calc(var(--band) + 6px)}
+
+/* ---------- 3. Cabeçalho: marca vira capítulo atual ------------------------ */
+.nav__in{position:relative}
+.brand__txt{transition:opacity .35s var(--ease-out),transform .5s var(--ease-out)}
+.nav.m-deep .brand__txt{opacity:0;transform:translateY(-70%)}
+.m-chap{
+  display:flex;flex-direction:column;justify-content:center;
+  position:absolute;left:51px;top:50%;
+  max-width:calc(100% - 51px - 108px);min-height:44px;padding-right:22px;
+  text-align:left;color:var(--fg);
+  opacity:0;visibility:hidden;transform:translateY(-10%);
+  transition:opacity .35s var(--ease-out),transform .5s var(--ease-out),visibility .5s;
+}
+.nav.m-deep .m-chap{opacity:1;visibility:visible;transform:translateY(-50%)}
+.m-chap small{
+  font-family:var(--mono);font-size:10.4px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--blue-hi);white-space:nowrap;
+}
+.m-chap b{
+  display:block;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-family:var(--display);font-weight:800;font-stretch:112%;font-size:.95rem;letter-spacing:-.02em;
+}
+.m-chap svg{position:absolute;right:0;bottom:7px;width:16px;height:16px;color:var(--fg-faint)}
+
+/* progresso da leitura logo abaixo do cabeçalho */
+.thin{
+  height:2px;background:linear-gradient(90deg,var(--blue-deep),var(--blue-hi));
+  box-shadow:0 0 12px rgba(79,141,255,.75);border-radius:0 2px 2px 0;
+}
+
+/* ---------- 4. Menu em folha inferior --------------------------------------- */
+.m-scrim{
+  display:block;position:fixed;inset:0;z-index:905;
+  background:rgba(5,5,7,.62);
+  backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+  opacity:0;visibility:hidden;transition:opacity .4s var(--ease),visibility .4s;
+}
+.m-scrim.on{opacity:1;visibility:visible}
+
+.sheet{
+  inset:auto 0 0 0;z-index:960;
+  max-height:calc(100svh - var(--nav-h) - var(--safe-top) - 10px);
+  padding:0 16px calc(16px + env(safe-area-inset-bottom,0px));gap:0;
+  background:var(--ink-1);
+  border:1px solid var(--rule-2);border-bottom:0;
+  border-radius:26px 26px 0 0;
+  box-shadow:0 -30px 80px -20px rgba(0,0,0,.95);
+  transform:translateY(calc(100% + 30px));opacity:1;
+  transition:transform .55s var(--spring),visibility .55s;
+  overscroll-behavior:contain;
+}
+.sheet.open{transform:translateY(var(--drag,0px))}
+.sheet.is-drag{transition:none}
+
+.sheet__head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
+  position:sticky;top:0;z-index:2;padding:26px 2px 14px;
+  background:var(--ink-1);touch-action:none;
+}
+.sheet__head::before{
+  content:"";position:absolute;top:9px;left:50%;width:42px;height:5px;margin-left:-21px;
+  border-radius:9px;background:var(--rule-2);
+}
+.sheet__head small{
+  display:block;font-family:var(--mono);font-size:10.4px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--fg-faint);
+}
+.sheet__head b{
+  display:block;margin-top:4px;font-family:var(--display);font-weight:800;font-stretch:116%;
+  font-size:1.55rem;letter-spacing:-.03em;line-height:1;
+}
+.sheet__search{
+  display:inline-flex;align-items:center;gap:8px;flex:none;
+  height:44px;padding:0 16px;border:1px solid var(--rule-2);border-radius:var(--r-pill);
+  font-size:.85rem;font-weight:600;color:var(--fg);
+}
+.sheet__search svg{width:16px;height:16px;color:var(--blue-hi)}
+
+.sheet__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.sheet__grid a{
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:10px;
+  min-height:74px;padding:12px 14px;
+  border:1px solid var(--rule);border-radius:16px;background:var(--ink-2);
+  font-size:1.02rem;line-height:1.1;letter-spacing:-.02em;
+  transition:border-color .3s,background .3s,scale .2s var(--ease-out);
+}
+.sheet__grid a:last-child{grid-column:1 / -1;min-height:60px;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px}
+.sheet__grid a em{font-size:10.4px;color:var(--fg-faint)}
+.sheet__grid a.on{
+  border-color:rgba(79,141,255,.7);
+  background:linear-gradient(150deg,rgba(27,107,255,.26),rgba(27,107,255,.06) 70%);
+}
+.sheet__grid a.on em{color:var(--blue-hi)}
+.sheet .btn{margin-top:12px;width:100%}
+.sheet__foot{
+  margin-top:12px;padding-top:12px;border-top:1px solid var(--rule);
+  display:flex;flex-wrap:wrap;gap:2px 14px;
+}
+
+/* ---------- 5. Barra de abas flutuante -------------------------------------- */
+.tabbar{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:stretch;
+  position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:895;
+  height:var(--tab-h);padding:0 4px;border-radius:24px;
+  background:rgba(17,17,21,.86);
+  backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 20px 44px -14px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.07);
+  transition:transform .55s var(--ease-out),opacity .35s;
+}
+.tabbar.m-hide,.tabbar.m-kb{transform:translateY(calc(100% + 30px + env(safe-area-inset-bottom,0px)))}
+.tabbar__ind{
+  position:absolute;left:0;top:7px;bottom:7px;width:var(--w,0px);
+  transform:translateX(var(--x,0px));border-radius:17px;opacity:0;
+  background:linear-gradient(180deg,rgba(27,107,255,.24),rgba(27,107,255,.1));
+  box-shadow:inset 0 0 0 1px rgba(79,141,255,.3);
+  transition:transform .6s var(--spring),width .6s var(--spring),opacity .3s;
+}
+.tabbar__ind.on{opacity:1}
+.tabbar__ind::before{
+  content:"";position:absolute;top:-1px;left:30%;right:30%;height:2px;border-radius:2px;
+  background:var(--blue-hi);box-shadow:0 0 10px var(--blue-hi);
+}
+.tabbar__a{
+  position:relative;z-index:1;overflow:hidden;border-radius:17px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  color:var(--fg-faint);transition:color .3s;
+}
+.tabbar__a svg{width:21px;height:21px;transition:transform .5s var(--spring),color .3s}
+.tabbar__a span{font-family:var(--mono);font-size:10.4px;letter-spacing:.04em;text-transform:uppercase}
+.tabbar__a.on{color:var(--fg)}
+.tabbar__a.on svg{color:var(--blue-hi);transform:translateY(-1px) scale(1.1)}
+
+.tabbar__wa{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;
+  padding-bottom:9px;color:#43e27f;
+}
+.tabbar__wa i{
+  position:relative;display:grid;place-items:center;width:52px;height:52px;margin-top:-24px;
+  border-radius:50%;background:#25d366;color:#062a12;
+  box-shadow:0 12px 26px -8px rgba(37,211,102,.7),0 0 0 5px var(--ink);
+  transition:scale .25s var(--ease-out);
+}
+.tabbar__wa svg{width:26px;height:26px}
+.tabbar__wa i::after{
+  content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #25d366;opacity:0;
+}
+.tabbar__wa span{font-family:var(--mono);font-size:10.4px;letter-spacing:.04em;text-transform:uppercase}
+.tabbar__wa:active i{scale:.92}
+
+/* avisos e respiro do rodapé acima da barra */
+.toast{bottom:calc(var(--tab-h) + 26px + env(safe-area-inset-bottom,0px))}
+
+/* ---------- 6. Topo em tela cheia --------------------------------------------
+   O retrato vira o fundo da primeira tela e a mensagem sobe por cima do
+   degradê. Título, provas e os dois botões cabem antes da primeira rolagem. */
+.hero{
+  --photo:56svh;
+  min-height:100svh;padding:0 0 calc(var(--tab-h) + 40px);
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.hero::before{
+  z-index:1;
+  background:radial-gradient(100% 38% at 50% 100%,rgba(27,107,255,.2),transparent 72%);
+}
+.hero__in{position:static;display:block;gap:0}
+.hero__in > div{position:static;padding-top:calc(var(--photo) - 7.2rem)}
+.hero__in > div > :not(.hero__flags){position:relative;z-index:2}
+
+.frame--foto{
+  position:absolute;inset:0 0 auto 0;z-index:0;
+  width:auto;height:var(--photo);margin:0;order:0;justify-self:auto;
+  animation:none;
+}
+.frame--foto .frame__body{height:100%}
+.frame--foto .shot{
+  height:100%;border-radius:0;box-shadow:none;
+  animation:none;transform-origin:50% 0;
+  transform:translate3d(0,calc(var(--hp,0) * 80px),0) scale(calc(1 + var(--hp,0) * .08));
+}
+.frame--foto .shot img{height:100%;aspect-ratio:auto;object-position:50% 14%}
+.frame--foto .shot::after{
+  background:linear-gradient(180deg,rgba(10,10,12,.7) 0%,rgba(10,10,12,0) 24%,rgba(10,10,12,0) 44%,rgba(10,10,12,.86) 80%,var(--ink) 100%);
+}
+.frame--foto .shot__grid{opacity:.12}
+
+/* rede de partículas por cima da foto, discreta */
+.fx-net{z-index:1;mix-blend-mode:screen}
+.fx-net.on{opacity:.55}
+
+.hero__flags{
+  position:absolute;z-index:3;margin:0;
+  top:calc(var(--nav-h) + var(--safe-top) + 16px);left:var(--gutter);right:var(--gutter);
+}
+.hero__flags .chip{
+  background:rgba(10,10,12,.5);border-color:rgba(255,255,255,.16);color:var(--fg);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+
+/* o número do melhor Reel já está na faixa de provas: no celular sai de cima do rosto */
+.frame--foto .frame__stat{display:none}
+
+.hero h1{margin-bottom:14px}
+.d1{font-size:clamp(2rem,10.4vw,3.2rem);max-width:none}
+.hero .lead{font-size:.95rem;line-height:1.62}
+.hero__acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:20px}
+.hero__acts .btn{padding:0 12px;font-size:.84rem;gap:8px}
+.hero__proof{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:22px}
+.hero__proof div{padding:14px 6px 0 0}
+.hero__proof div + div,.hero__proof .hero__proof--lead{
+  grid-column:auto;padding-left:12px;border-top:0;border-left:1px solid var(--rule);
+}
+.hero__proof b{font-size:clamp(1.12rem,5.4vw,1.45rem)}
+.hero__proof span{font-size:10.4px;letter-spacing:.05em}
+.hero__cue{display:none}
+
+/* telas baixas (iPhone SE): a foto encolhe para os botões caberem */
+@media (max-height:720px){
+  .hero{--photo:46svh}
+}
+/* telas estreitas: os dois botões não cabem lado a lado */
+@media (max-width:360px){
+  .hero__acts{grid-template-columns:minmax(0,1fr)}
+  .hero__acts .btn{min-height:48px}
+}
+
+.ticker--brands{padding-block:14px}
+.ticker--brands .ticker__grp span{font-size:1rem;gap:18px;padding-inline:18px}
+
+/* ---------- 7. Números em bento --------------------------------------------- */
+.figs{gap:10px;border:0;background:none;overflow:visible;border-radius:0}
+.figs > div,.figs > div + div,.figs > div:nth-child(even){
+  padding:18px 16px;overflow:hidden;
+  border:1px solid var(--rule);border-radius:var(--m-r);
+  background:linear-gradient(160deg,var(--ink-2),var(--ink) 70%);
+}
+.figs > div:first-child,.figs > .fig--lead{grid-column:1 / -1}
+.figs > div:first-child b,.figs > .fig--lead b{font-size:clamp(2.6rem,13vw,3.4rem)}
+.figs > div:nth-child(2) b,.figs > div:nth-child(3) b{font-size:clamp(1.25rem,6vw,1.6rem)}
+.figs > .fig--lead{
+  border-color:rgba(56,211,159,.3);
+  background:linear-gradient(160deg,rgba(56,211,159,.12),var(--ink) 70%);
+}
+.figs span{font-size:10.4px}
+.figs > div::after{left:16px;right:16px;width:0;top:0}
+.figs > div.seen::after{width:calc(100% - 32px)}
+.figs__note{margin-top:16px;gap:8px 16px}
+
+/* ---------- 8. Case 8,4M ---------------------------------------------------- */
+.case{gap:20px}
+.case__shot{max-width:none}
+.readout--lg{--pad:20px;border-radius:22px}
+.readout--lg .readout__hero b{font-size:clamp(2.3rem,11vw,2.9rem)}
+/* o parágrafo repete os números do painel logo acima */
+.case > .rv[data-d="1"] > .copy{display:none}
+.metrics{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:0;border-radius:var(--m-r)}
+.metric{padding:14px 10px 13px}
+.metric b{font-size:clamp(.98rem,4.6vw,1.12rem)}
+.metric span{font-size:10.4px;letter-spacing:.04em}
+.note{margin-top:14px;border-radius:var(--m-r)}
+
+/* ---------- 9. Marcas em stories ---------------------------------------------- */
+.m-stories{display:block;position:relative;margin:-8px 0 8px}
+.m-stories__segs{display:flex;gap:2px}
+.m-stories__segs button{flex:1;min-width:0;height:44px;display:flex;align-items:center;padding-inline:1px}
+.m-stories__segs i{
+  position:relative;display:block;width:100%;height:3px;border-radius:3px;overflow:hidden;
+  background:rgba(255,255,255,.14);
+}
+.m-stories__segs b{
+  position:absolute;inset:0;border-radius:inherit;background:var(--seg-c,var(--fg));
+  transform:scaleX(0);transform-origin:left;
+}
+.m-stories__segs .done b,.m-stories__segs .on b{transform:none}
+/* pausar fica sobre o canto da captura, como nos stories */
+.m-stories__pp{
+  position:absolute;z-index:4;top:calc(100% + 18px);right:10px;
+  width:44px;height:44px;display:grid;place-items:center;border-radius:50%;
+  background:rgba(10,10,12,.62);border:1px solid rgba(255,255,255,.18);color:var(--fg);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.m-stories__pp svg{width:15px;height:15px}
+.m-stories__pp[hidden]{display:none}
+
+.brands{gap:12px;padding-bottom:4px;scroll-padding-inline:var(--gutter)}
+.brands + .dots{display:none}
+.brand-card,.brand-card--wide{
+  flex:0 0 calc(100vw - var(--gutter) * 2);scroll-snap-align:center;
+  border-radius:22px;
+}
+.brand-card__shot img{aspect-ratio:16/10}
+.brand-card__zoom{opacity:1;transform:none;width:40px;height:40px;border-radius:50%}
+.brand-card::before{transform:scaleX(1);height:3px}
+.brand-card__body{padding:18px}
+
+/* ---------- 10. Perfil: retrato de ponta a ponta ------------------------------ */
+.profile{gap:26px;margin-bottom:36px}
+.portrait{max-width:none;width:auto;margin-inline:calc(var(--gutter) * -1)}
+.portrait__frame{border-radius:0}
+.portrait__frame img{aspect-ratio:4/5;object-position:50% 16%}
+.portrait__frame::after{
+  background:linear-gradient(180deg,rgba(10,10,12,.35) 0%,transparent 22%,transparent 50%,rgba(10,10,12,.9) 88%,var(--ink) 100%);
+}
+.portrait__frame::before{left:var(--gutter);top:calc(var(--m-r) * 1.5 + 8px)}
+.portrait.m-color .portrait__frame img{filter:grayscale(0) contrast(1.03) saturate(.97)}
+.portrait__meta{position:absolute;left:var(--gutter);right:var(--gutter);bottom:18px;margin:0}
+.portrait__tag{background:rgba(10,10,12,.55)}
+.portrait__tag:first-child{display:none}
+.portrait__card{
+  position:absolute;left:var(--gutter);right:auto;top:auto;bottom:62px;margin:0;
+  display:block;max-width:250px;padding:12px 15px;
+  background:rgba(10,10,12,.55);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.portrait__card small{margin-bottom:5px}
+.portrait__card b{text-align:left;font-size:.88rem}
+
+.profile__lead{font-size:1.28rem}
+.profile__facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:20px;border-top:0}
+.profile__facts li{
+  grid-template-columns:1fr;gap:6px;align-content:start;padding:14px;
+  border:1px solid var(--rule);border-radius:16px;background:var(--ink-1);
+}
+.profile__facts span{font-size:.84rem;line-height:1.5}
+.profile__acts{display:grid;gap:10px}
+
+.band--profile .pillars > .pillar,.systems > .sys,.plans > .plan{border-radius:22px}
+
+/* ---------- 11. Trajetória -------------------------------------------------- */
+.road__item{padding-block:22px}
+.road__body h3{font-size:1.12rem}
+
+/* ---------- 12. Serviços ---------------------------------------------------- */
+.svc{border-radius:22px}
+.svc--tall .svc__art{min-height:230px}
+.goal{padding:16px 14px}
+
+/* ---------- 13. Processo ------------------------------------------------------ */
+#processo .step{top:calc(var(--nav-h) + var(--safe-top) + 14px + var(--k,0) * 12px);border-radius:20px}
+
+/* antes / depois vira um interruptor */
+.m-seg{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));position:relative;
+  margin:22px 0 12px;padding:4px;border-radius:var(--r-pill);
+  background:var(--paper-2);border:1px solid var(--rule-ink);
+}
+.m-seg__ind{
+  position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:var(--r-pill);
+  background:#a3300a;transition:transform .6s var(--spring),background .4s;
+}
+.m-seg[data-v="good"] .m-seg__ind{transform:translateX(100%);background:var(--blue-deep)}
+.m-seg button{
+  position:relative;z-index:1;min-height:44px;padding:0 8px;border-radius:var(--r-pill);overflow:hidden;
+  font-size:.8rem;font-weight:600;line-height:1.2;color:var(--on-paper-dim);transition:color .3s;
+}
+.m-seg button[aria-pressed="true"]{color:#fff}
+.vs.m-vs{display:grid;grid-template-columns:minmax(0,1fr);margin-top:0;background:none;border:0}
+.vs.m-vs > .vs__side{
+  grid-area:1 / 1;border:1px solid var(--rule-ink);border-radius:20px;
+  transition:opacity .45s var(--ease-out),transform .55s var(--ease-out),visibility .55s;
+}
+.vs.m-vs[data-v="good"] .vs__side--bad{opacity:0;visibility:hidden;transform:translateX(-24px) scale(.98)}
+.vs.m-vs[data-v="bad"] .vs__side--good{opacity:0;visibility:hidden;transform:translateX(24px) scale(.98)}
+
+/* ---------- 14. Pacotes ------------------------------------------------------- */
+.plans__bar{flex-direction:row;align-items:center;padding:12px 12px 12px 16px;border-radius:var(--m-r)}
+.plans__bar p{flex:1;min-width:0;font-size:.8rem;line-height:1.45}
+.plans__bar .btn{flex:none}
+.m-tabs{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));position:relative;
+  margin-bottom:14px;padding:4px;border-radius:var(--r-pill);
+  background:var(--paper-2);border:1px solid var(--rule-ink);
+}
+.m-tabs__ind{
+  position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px) / 3);
+  border-radius:var(--r-pill);background:var(--ink);
+  transform:translateX(calc(var(--i,0) * 100%));transition:transform .6s var(--spring);
+}
+.m-tabs button{
+  position:relative;z-index:1;min-height:44px;border-radius:var(--r-pill);overflow:hidden;
+  font-family:var(--mono);font-size:10.4px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--on-paper-dim);transition:color .3s;
+}
+.m-tabs button[aria-pressed="true"]{color:#fff}
+.plans + .dots{display:none}
+.plan--star{box-shadow:0 26px 50px -24px rgba(10,10,12,.7)}
+.plan__note{border-radius:var(--m-r)}
+
+/* ---------- 15. Diagnóstico em etapas ----------------------------------------- */
+.diag{display:flex;flex-direction:column;gap:0}
+.diag > .rv:first-child{display:contents}
+.diag .slug::after{transform:none}
+.diag > .rv:last-child{order:1;margin-top:24px}
+.diag__out{order:2;margin-top:18px;border-radius:var(--m-r)}
+
+.m-diag__bar{display:flex;align-items:center;gap:12px;margin-bottom:16px;min-height:44px}
+.m-diag__back{
+  flex:none;min-height:44px;padding:0 14px 0 10px;border:1px solid var(--rule);border-radius:var(--r-pill);
+  font-size:.8rem;font-weight:600;color:var(--fg-dim);
+}
+.m-diag__back[hidden]{display:none}
+.m-diag__n{
+  flex:none;font-family:var(--mono);font-size:10.4px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--fg-dim);font-variant-numeric:tabular-nums;
+}
+.m-diag__prog{flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}
+.m-diag__prog i{
+  display:block;height:100%;width:calc(var(--p,0) * 100%);border-radius:inherit;
+  background:linear-gradient(90deg,var(--blue),var(--blue-hi));transition:width .6s var(--spring);
+}
+.m-diag.is-done .m-diag__prog i{background:var(--mint)}
+
+.m-diag .diag__q{display:none;padding:0;border:0}
+.m-diag .diag__q.is-on{display:block}
+.m-diag .diag__q > p{
+  margin-bottom:16px;font-family:var(--display);font-weight:800;font-stretch:112%;
+  font-size:1.4rem;line-height:1.12;letter-spacing:-.025em;text-transform:none;color:var(--fg);
+}
+.m-diag .diag__opts{display:grid;gap:10px}
+.m-diag .diag__opts button{
+  display:flex;align-items:center;gap:14px;min-height:58px;padding:0 18px;
+  border-radius:16px;border-color:var(--rule-2);background:var(--ink-1);
+  font-size:.95rem;text-align:left;color:var(--fg);
+}
+.m-diag .diag__opts button::before{
+  content:"";flex:none;width:20px;height:20px;border-radius:50%;
+  border:1.5px solid var(--rule-2);transition:border-color .25s,background .25s;
+}
+.m-diag .diag__opts button[aria-pressed="true"]::before{
+  border-color:#fff;background:radial-gradient(circle,#fff 0 4px,transparent 5px);
+}
+/* com as três respondidas, vira um resumo; tocar numa resposta reabre a pergunta */
+.m-diag.is-done .diag__q{display:block;padding:12px 0;border-top:1px solid var(--rule)}
+.m-diag.is-done .m-diag__bar + .diag__q{border-top:0}
+.m-diag.is-done .diag__q > p{
+  margin-bottom:8px;font-family:var(--mono);font-size:10.4px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);
+}
+.m-diag.is-done .diag__opts button:not([aria-pressed="true"]){display:none}
+.m-diag.is-done .diag__opts button{min-height:48px}
+
+/* ---------- 16. Perguntas ------------------------------------------------------ */
+.faq__list{display:grid;gap:8px;border-top:0}
+.faq__item{
+  padding:0 16px;border:1px solid var(--rule);border-radius:16px;background:var(--ink-1);
+  transition:border-color .3s,background .3s;
+}
+.faq__item.open{border-color:rgba(79,141,255,.45);background:var(--ink-2)}
+.faq__q{padding:16px 0;font-size:.98rem;min-height:60px}
+.faq__q i{border-radius:50%}
+.faq__a p{padding-bottom:18px}
+
+/* ---------- 17. Contato --------------------------------------------------------- */
+.avail{border-radius:var(--m-r)}
+.links{
+  grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:dense;gap:8px;
+  background:none;border:0;border-radius:0;overflow:visible;
+}
+.link{position:relative;overflow:hidden;border:1px solid var(--rule);border-radius:var(--m-r);background:var(--ink-1)}
+.link--wa,.links > a[href^="mailto"],.link--vcf{grid-column:1 / -1}
+.link--wa{
+  padding:20px 18px;border-color:rgba(37,211,102,.4);
+  background:linear-gradient(135deg,rgba(37,211,102,.18),rgba(37,211,102,.04) 70%);
+}
+.links > a[href*="instagram"],.links > a[href^="tel"]{flex-direction:column;align-items:flex-start;gap:14px;padding:16px}
+.links > a[href*="instagram"] em,.links > a[href^="tel"] em{position:absolute;top:14px;right:16px}
+.link div span{white-space:nowrap}
+
+.form{padding:20px 18px;border-radius:22px}
+.field input,.field select,.field textarea{font-size:16px;padding:14px;border-radius:12px}
+.form__acts .btn{min-height:54px}
+
+/* ---------- 18. Rodapé -------------------------------------------------------- */
+.foot{padding-bottom:calc(var(--tab-h) + 40px + env(safe-area-inset-bottom,0px))}
+
+/* ---------- 19. Janelas em folha inferior --------------------------------------- */
+.ov:not(.ov--cmdk){place-items:end stretch;padding:0}
+.ov:not(.ov--cmdk) .ov__card{
+  width:100%;max-height:calc(100svh - var(--safe-top) - 36px);
+  border-radius:26px 26px 0 0;border-bottom:0;
+  transform:translateY(105%);
+  transition:transform .55s var(--spring);
+}
+.ov.on:not(.ov--cmdk) .ov__card{transform:translateY(var(--drag,0px))}
+.ov:not(.ov--cmdk) .ov__card.is-drag{transition:none}
+.ov__head{padding-top:28px;touch-action:none}
+.ov__head::before{
+  content:"";position:absolute;top:10px;left:50%;width:42px;height:5px;margin-left:-21px;
+  border-radius:9px;background:var(--rule-2);
+}
+.ov__x{width:44px;height:44px;border-radius:50%}
+.ov__foot{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+
+.ov--cmdk{padding:calc(var(--safe-top) + 10px) 10px 0}
+.cmdk{border-radius:22px}
+.cmdk__in input{font-size:16px}
+
+/* ---------- 20. Toque: resposta imediata ---------------------------------------- */
+.btn,.faq__q,.diag__opts button,.sheet__grid a,.sheet__search{position:relative;overflow:hidden}
+.btn{transition:background .22s var(--ease),border-color .22s var(--ease),color .22s var(--ease),transform .22s var(--ease),scale .2s var(--ease-out)}
+.btn:active,.sheet__grid a:active,.diag__opts button:active,.link:active{scale:.97}
+.svc,.link,.diag__opts button{transition:border-color .3s var(--ease),background .3s,scale .2s var(--ease-out),transform .34s var(--ease-out)}
+.svc:active{scale:.98}
+.m-rip{
+  position:absolute;z-index:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;
+  background:currentColor;opacity:.24;pointer-events:none;transform:scale(0);
+  animation:mRip .65s var(--ease-out) forwards;
+}
+@keyframes mRip{to{transform:scale(var(--s,30));opacity:0}}
+
+/* cartões dos carrosséis: o do centro em foco, os vizinhos recuam */
+.brands > *,.band--profile .pillars > *,.systems > *,.plans > *{
+  scale:calc(1 - var(--d,0) * .06);
+  filter:brightness(calc(1 - var(--d,0) * .32));
+}
+
+/* ---------- 21. Movimento -------------------------------------------------------- */
+@media (prefers-reduced-motion:no-preference){
+  /* revelação um pouco mais longa: no celular o olho percorre a coluna */
+  .js .rv{transform:translateY(26px);transition-duration:.8s}
+
+  /* topo: a foto entra, depois o título; o resto acompanha */
+  .hero__flags{animation:mRise .7s var(--ease-out) .15s both}
+  @keyframes mRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+  /* a barra de abas sobe depois da abertura */
+  .tabbar{animation:mTabIn .8s var(--spring) .9s backwards}
+  @keyframes mTabIn{from{transform:translateY(calc(100% + 40px))}}
+  .tabbar__wa i::after{animation:mPing 3.2s var(--ease-out) 2.4s infinite}
+  @keyframes mPing{0%{transform:scale(1);opacity:.8}70%,100%{transform:scale(1.55);opacity:0}}
+
+  /* troca do nome do capítulo no cabeçalho */
+  .m-chap b.m-swap{animation:mSwap .5s var(--ease-out)}
+  @keyframes mSwap{from{opacity:0;transform:translateY(60%)}to{opacity:1;transform:none}}
+
+  /* folha do menu: os blocos chegam em cascata */
+  .sheet.open .sheet__grid a{animation:mTile .5s var(--ease-out) both;animation-delay:calc(var(--i,0) * 28ms + 80ms)}
+  @keyframes mTile{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+
+  /* stories: o segmento ativo enche no tempo da troca */
+  .m-stories.is-play .m-stories__segs .on b{animation:mFill var(--story-t,6s) linear both}
+  @keyframes mFill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+  /* comparação: os itens do lado que aparece entram um a um */
+  .vs.m-vs[data-v="good"] .vs__side--good li,.vs.m-vs[data-v="bad"] .vs__side--bad li{animation:mItem .5s var(--ease-out) both}
+  .vs.m-vs .vs__side li:nth-child(2){animation-delay:.07s}
+  .vs.m-vs .vs__side li:nth-child(3){animation-delay:.14s}
+  .vs.m-vs .vs__side li:nth-child(4){animation-delay:.21s}
+  @keyframes mItem{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+
+  /* diagnóstico: a pergunta seguinte entra pela direita, a anterior pela esquerda */
+  .m-diag .diag__q.is-in{animation:mQin .5s var(--ease-out) both}
+  .m-diag .diag__q.is-back{animation:mQback .5s var(--ease-out) both}
+  @keyframes mQin{from{opacity:0;transform:translateX(36px)}to{opacity:1;transform:none}}
+  @keyframes mQback{from{opacity:0;transform:translateX(-36px)}to{opacity:1;transform:none}}
+  .m-diag .diag__q.is-on .diag__opts button{animation:mRise .45s var(--ease-out) both}
+  .m-diag .diag__q.is-on .diag__opts button:nth-child(2){animation-delay:.06s}
+  .m-diag .diag__q.is-on .diag__opts button:nth-child(3){animation-delay:.12s}
+  .m-diag.is-done .diag__q .diag__opts button{animation:none}
+
+  /* o retrato do perfil ganha cor devagar quando entra no centro da tela */
+  .portrait__frame img{transition:filter 1.4s var(--ease-out),transform 1.4s var(--ease-out)}
+}

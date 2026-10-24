@@ -54,6 +54,15 @@
   --sh-lg:0 34px 70px -28px rgba(0,0,0,.85);
   --ease:cubic-bezier(.2,.8,.2,1);
   --ease-out:cubic-bezier(.16,1,.3,1);
+  /* mola com leve passada do ponto: indicadores e folhas do celular */
+  --spring:linear(0,.006,.025 2.8%,.101 6.1%,.539 18.9%,.721 25.3%,.849 31.5%,.937 38.1%,.968 41.8%,.991 45.7%,1.006 50.1%,1.015 55%,1.017 63.9%,1.001 85.7%,1);
+  --dur-fast:160ms;
+  --dur-base:320ms;
+  --dur-slow:640ms;
+
+  /* Celular (css/mobile.css) */
+  --tab-h:64px;
+  --m-r:18px;
 }
 
 /* ---------- 2. Reset ----------------------------------------------------- */
@@ -862,7 +871,7 @@ h1,h2,h3,h4{
 .diag__out p{margin-top:8px;font-size:.85rem;line-height:1.6;color:var(--fg-dim)}
 .diag__out .btn{margin-top:16px}
 .diag__q{padding-block:20px;border-top:1px solid var(--rule)}
-.diag__q:first-child{border-top:0;padding-top:0}
+.diag__q:first-child,.m-diag__bar + .diag__q{border-top:0;padding-top:0}
 .diag__q > p{font-family:var(--mono);font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:13px}
 .diag__opts{display:flex;flex-wrap:wrap;gap:8px}
 .diag__opts button{
@@ -1458,35 +1467,14 @@ body::after{
 .plan--star .plan__scope i{color:var(--fg-dim)}
 
 /* ==========================================================================
-   38. Mobile — barra de ações fixa, sempre ao alcance do polegar
+   38. Mobile — barra de abas e peças da camada do celular
+   O desenho fica em css/mobile.css (spec 005), que só vale na tela do
+   celular. Aqui fica o que precisa valer sem ela: no desktop, no tablet e na
+   impressão essas peças não aparecem, e a folha do menu mantém o layout antigo.
    ========================================================================== */
-.dock{display:none}
+.tabbar,.m-ui,.sheet__head{display:none}
+.sheet__grid{display:contents}
 @media (max-width:720px){
-  .dock{
-    position:fixed;inset:auto 0 0 0;z-index:895;
-    display:grid;grid-template-columns:repeat(4,1fr);
-    background:rgba(10,10,12,.94);
-    backdrop-filter:blur(20px) saturate(150%);
-    -webkit-backdrop-filter:blur(20px) saturate(150%);
-    border-top:1px solid var(--rule);
-    padding-bottom:env(safe-area-inset-bottom,0px);
-    transform:translateY(110%);
-    transition:transform .42s var(--ease-out);
-  }
-  .dock.up{transform:none}
-  .dock__a{
-    display:grid;justify-items:center;gap:5px;
-    padding:11px 4px 10px;min-height:58px;
-    color:var(--fg-faint);transition:color .2s;
-  }
-  .dock__a svg{width:20px;height:20px}
-  .dock__a span{font-family:var(--mono);font-size:.55rem;letter-spacing:.06em;text-transform:uppercase}
-  .dock__a:active{color:var(--fg)}
-  .dock__a--cta{color:#25d366}
-  .dock__a--cta svg{
-    width:26px;height:26px;padding:3px;border-radius:50%;
-    background:#25d366;color:#062a12;
-  }
   /* o botão flutuante vira redundante com a barra */
   .wa{display:none}
   .foot{padding-bottom:96px}
@@ -1579,7 +1567,7 @@ body::after{
   .link div span{font-size:.8rem}
 }
 /* traço arredondado em todos os ícones de linha, para o mesmo acabamento */
-.goal svg,.dock__a svg,.icon-btn svg{
+.goal svg,.tabbar svg,.icon-btn svg{
   stroke-linecap:round;stroke-linejoin:round;
 }
 
@@ -2253,7 +2241,7 @@ select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{
 .svc__n,.svc__more,.step__tag,
 .plan__lbl,.plan__badge,.plan__scope span,.diag__out small,.form__head small,.prog__top,
 .field label,.field__err,.form__legal,.hint,.foot h4,.foot__base,.ov__head small,.dl h4,
-.cmp thead th small,.figs__note,.lb__cap,.dock__a span,
+.cmp thead th small,.figs__note,.lb__cap,.tabbar__a span,
 .profile__facts b,.foot__brand span,.sheet a em,.sheet__foot{
   font-size:max(var(--fs-micro),10.4px);
 }
@@ -2767,7 +2755,7 @@ html{scroll-padding-top:calc(var(--nav-h) + var(--safe-top) + 24px)}
    A área impressa tem menos de 720 px, então o layout de celular entra em
    ação: a barra de ações e o atalho de teclado precisam sair explicitamente. */
 @media print{
-  .dock,.skip,.btn,.plan__rec,.cmdk-btn,.fx-cur,.ov,.lb{display:none !important}
+  .tabbar,.m-ui,.skip,.btn,.plan__rec,.cmdk-btn,.fx-cur,.ov,.lb{display:none !important}
   body,.band,.hero,.foot,#numeros,#resultados,#marcas,#sobre,#servicos,#faq,#diagnostico,#contato,
   .metric,.figs > div,.brand-card,.svc,.svc__body,.links,.link,.pillar,.pillar--wide,.plan,.plan--star,
   .goal,.road__item,.faq__item,.form,.readout,.avail,.note,.diag__out,.case__shot,.dl > div,.vs__side,.step,

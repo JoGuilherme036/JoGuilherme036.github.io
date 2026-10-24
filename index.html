@@ -36,6 +36,8 @@
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/efeitos.css">
+<!-- Camada do celular: só vale na tela de até 720 px (fora dela não bloqueia a renderização) -->
+<link rel="stylesheet" href="css/mobile.css" media="screen and (max-width:720px)">
 
 <script type="application/ld+json">
 {
@@ -121,16 +123,26 @@
 
 <!-- ================= Menu mobile ================= -->
 <div class="sheet" id="sheet" aria-hidden="true">
-  <a href="#resultados"><em>02</em> Resultados</a>
-  <a href="#marcas"><em>03</em> Marcas atendidas</a>
-  <a href="#sobre"><em>04</em> Perfil</a>
-  <a href="#trajetoria"><em>05</em> Trajetória</a>
-  <a href="#servicos"><em>06</em> Serviços</a>
-  <a href="#processo"><em>07</em> Como funciona</a>
-  <a href="#pacotes"><em>08</em> Pacotes</a>
-  <a href="#diagnostico"><em>09</em> Diagnóstico</a>
-  <a href="#faq"><em>10</em> Perguntas</a>
-  <a href="#contato"><em>11</em> Contato</a>
+  <div class="sheet__head">
+    <div><small>Portfólio em 11 capítulos</small><b>Ir para</b></div>
+    <button class="sheet__search" type="button" data-cmdk>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      Buscar
+    </button>
+  </div>
+  <div class="sheet__grid">
+    <a href="#numeros"><em>01</em> Números</a>
+    <a href="#resultados"><em>02</em> Resultados</a>
+    <a href="#marcas"><em>03</em> Marcas atendidas</a>
+    <a href="#sobre"><em>04</em> Perfil</a>
+    <a href="#trajetoria"><em>05</em> Trajetória</a>
+    <a href="#servicos"><em>06</em> Serviços</a>
+    <a href="#processo"><em>07</em> Como funciona</a>
+    <a href="#pacotes"><em>08</em> Pacotes</a>
+    <a href="#diagnostico"><em>09</em> Diagnóstico</a>
+    <a href="#faq"><em>10</em> Perguntas</a>
+    <a href="#contato"><em>11</em> Contato</a>
+  </div>
   <a class="btn btn--blue" data-wa="header" href="https://wa.me/5586994432717" target="_blank" rel="noopener">Falar no WhatsApp</a>
   <div class="sheet__foot">
     <span>(86) 99443-2717</span>
@@ -1045,12 +1057,14 @@
   WhatsApp
 </a>
 
-<!-- Barra de ações fixa no celular -->
-<nav class="dock" id="dock" aria-label="Ações rápidas">
-  <a class="dock__a" href="#resultados"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5m0 14h16"/><path d="m7 15 4-4 3 2 5-6"/></svg><span>Resultados</span></a>
-  <a class="dock__a" href="#sobre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg><span>Perfil</span></a>
-  <a class="dock__a dock__a--cta" data-wa="dock" href="https://wa.me/5586994432717" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.6 4.8-1.3A10 10 0 1 0 12 2Zm5.8 14.2c-.24.68-1.4 1.3-1.94 1.34-.5.04-.96.22-3.23-.67-2.72-1.07-4.44-3.86-4.58-4.04-.13-.18-1.09-1.45-1.09-2.76 0-1.31.69-1.96.93-2.22.24-.27.53-.33.7-.33h.5c.16 0 .38-.06.59.45.24.57.8 1.98.87 2.13.07.14.12.31.02.5-.09.18-.14.3-.28.46l-.42.49c-.14.14-.28.29-.12.57.16.27.72 1.18 1.54 1.92 1.06.94 1.95 1.23 2.23 1.37.27.14.43.12.59-.07.16-.18.68-.79.86-1.06.18-.27.36-.23.6-.14.25.09 1.57.74 1.84.87.27.14.45.2.51.31.07.11.07.64-.17 1.32Z"/></svg><span>Falar agora</span></a>
-  <a class="dock__a" href="#contato"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/></svg><span>Briefing</span></a>
+<!-- Barra de abas do celular: uma aba por ato, WhatsApp no centro (desenho em css/mobile.css) -->
+<nav class="tabbar" id="dock" aria-label="Navegação rápida">
+  <span class="tabbar__ind" aria-hidden="true"></span>
+  <a class="tabbar__a" href="#resultados" data-act="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 19V5m0 14h16"/><path d="m7 15 4-4 3 2 5-6"/></svg><span>Provas</span></a>
+  <a class="tabbar__a" href="#sobre" data-act="2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg><span>Perfil</span></a>
+  <a class="tabbar__wa" data-wa="dock" href="https://wa.me/5586994432717" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.6 4.8-1.3A10 10 0 1 0 12 2Zm5.8 14.2c-.24.68-1.4 1.3-1.94 1.34-.5.04-.96.22-3.23-.67-2.72-1.07-4.44-3.86-4.58-4.04-.13-.18-1.09-1.45-1.09-2.76 0-1.31.69-1.96.93-2.22.24-.27.53-.33.7-.33h.5c.16 0 .38-.06.59.45.24.57.8 1.98.87 2.13.07.14.12.31.02.5-.09.18-.14.3-.28.46l-.42.49c-.14.14-.28.29-.12.57.16.27.72 1.18 1.54 1.92 1.06.94 1.95 1.23 2.23 1.37.27.14.43.12.59-.07.16-.18.68-.79.86-1.06.18-.27.36-.23.6-.14.25.09 1.57.74 1.84.87.27.14.45.2.51.31.07.11.07.64-.17 1.32Z"/></svg></i><span>WhatsApp</span></a>
+  <a class="tabbar__a" href="#servicos" data-act="3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/></svg><span>Serviços</span></a>
+  <a class="tabbar__a" href="#contato" data-act="4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v11H9.5L4 20.5V5Z"/><path d="M8 9.5h8M8 12.5h5"/></svg><span>Contato</span></a>
 </nav>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1153,5 +1167,6 @@
 
 <script src="js/app.js" defer></script>
 <script src="js/efeitos.js" defer></script>
+<script src="js/mobile.js" defer></script>
 </body>
 </html>
