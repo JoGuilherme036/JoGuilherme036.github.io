@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://joguilherme036.github.io/sitemap.xml

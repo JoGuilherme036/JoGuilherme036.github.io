@@ -1,0 +1,13 @@
+BEGIN:VCARD
+VERSION:3.0
+N:;João Guilherme;;;
+FN:João Guilherme
+ORG:JG Marketing
+TITLE:Estrategista de conteúdo, designer e desenvolvedor
+TEL;TYPE=CELL,VOICE:+5586994432717
+EMAIL;TYPE=INTERNET:joguilherme036@gmail.com
+URL:https://joguilherme036.github.io/
+X-SOCIALPROFILE;TYPE=instagram:https://www.instagram.com/jgmarketing__/
+ADR;TYPE=WORK:;;;Teresina;PI;;Brasil
+NOTE:Conteúdo\, design\, sites e sistemas para marcas que precisam aparecer e vender melhor.
+END:VCARD

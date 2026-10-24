@@ -1,0 +1,171 @@
+/* ==========================================================================
+   JG Marketing — camada de efeitos (css/efeitos.css)
+   Tudo aqui é acréscimo: se este arquivo ou js/efeitos.js falhar, o site
+   continua inteiro. Regras com `html.fx` só valem depois que o JS confirma
+   que está rodando; movimento só fora de `prefers-reduced-motion: reduce`.
+   Ordem: 1 brilho · 2 botão elástico · 3 cursor · 4 texto · 5 odômetro ·
+          7 gráfico de barras · 8 linha do tempo · 9 íris · 10 painéis ·
+          11 pilha de cartões · 12 rede de partículas · 13 confete
+   (3D das marcas e feixe das etapas ficam em style.css §52)
+   ========================================================================== */
+
+.fx-sr{
+  position:absolute !important;width:1px;height:1px;margin:-1px;padding:0;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+
+/* ---------- 1. Brilho que segue o ponteiro nos cartões ------------------- */
+.fx-card{position:relative}
+.fx-gl{
+  position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:inherit;
+  opacity:0;transition:opacity .35s var(--ease);
+  background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),rgba(79,141,255,.17),transparent 62%);
+}
+.fx-card:hover > .fx-gl{opacity:1}
+.band--paper .fx-gl{background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),rgba(27,107,255,.09),transparent 62%)}
+
+/* ---------- 2. Botão elástico -------------------------------------------- */
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .btn{
+    transition:background .22s var(--ease),border-color .22s var(--ease),
+               color .22s var(--ease),transform .22s var(--ease),
+               translate .55s cubic-bezier(.22,1.7,.36,1);
+  }
+}
+
+/* ---------- 3. Cursor ----------------------------------------------------- */
+.fx-cur{
+  position:fixed;left:0;top:0;z-index:3000;pointer-events:none;
+  opacity:0;transition:opacity .25s;
+}
+.fx-cur.on{opacity:1}
+.fx-cur__ring,.fx-cur__dot{position:absolute;left:0;top:0;pointer-events:none}
+.fx-cur__ring{
+  width:38px;height:38px;margin:-19px 0 0 -19px;border-radius:50%;
+  border:1.5px solid rgba(79,141,255,.75);
+  display:grid;place-items:center;
+  transition:width .3s var(--ease-out),height .3s var(--ease-out),margin .3s var(--ease-out),
+             background .3s,border-color .3s;
+}
+.fx-cur__dot{width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--blue-hi);transition:opacity .2s}
+.fx-cur__lbl{
+  font:600 .6rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#fff;
+  opacity:0;transform:scale(.6);transition:opacity .2s,transform .3s var(--ease-out);
+}
+.fx-cur.is-link .fx-cur__ring{width:54px;height:54px;margin:-27px 0 0 -27px;background:rgba(79,141,255,.12);border-color:var(--blue-hi)}
+.fx-cur.is-lbl .fx-cur__ring{width:76px;height:76px;margin:-38px 0 0 -38px;background:var(--blue);border-color:var(--blue)}
+.fx-cur.is-lbl .fx-cur__lbl{opacity:1;transform:none}
+.fx-cur.is-lbl .fx-cur__dot{opacity:0}
+.fx-cur.is-down .fx-cur__ring{transform:scale(.82)}
+@media (hover:none),(pointer:coarse){.fx-cur{display:none}}
+
+/* ---------- 4. Texto -------------------------------------------------------
+   4a. embaralhar letras (palavras de destaque)   4b. preencher ao rolar    */
+.fx-scr{white-space:nowrap}
+.fx-scr--pre{color:transparent !important;-webkit-text-stroke-color:transparent !important}
+.fx-scr--run{display:inline-block}
+html.fx .fx-w{opacity:.26;transition:opacity .4s var(--ease)}
+html.fx .fx-w.on{opacity:1}
+html.fx .fx-fill--calm .fx-w{opacity:1;transition:none}
+
+/* ---------- 5. Odômetro ---------------------------------------------------- */
+x-odo,x-c,x-r,x-d,x-s{font:inherit;letter-spacing:inherit;text-transform:none;color:inherit}
+.odo{display:inline-flex;align-items:flex-start;height:1.12em;line-height:1.12;overflow:hidden;vertical-align:top}
+.odo__s{display:block;height:1.12em;line-height:1.12;white-space:pre}
+.odo__c{display:block;height:1.12em;overflow:visible}
+.odo__r{
+  display:flex;flex-direction:column;transform:translateY(0);
+  transition:transform var(--odo-t,1.7s) cubic-bezier(.16,1,.3,1) var(--dl,0s);
+}
+.odo__r x-d{display:block;height:1.12em;line-height:1.12;font-style:normal}
+.odo.go .odo__r{transform:translateY(calc(var(--n) * -1.12em))}
+
+/* ---------- 7. Gráfico de barras (case) ----------------------------------- */
+.bars{margin:26px 0 0;padding:20px;border:1px solid var(--rule);border-radius:var(--r-lg);background:var(--ink-1)}
+.bars__t{
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  font:600 .68rem/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);
+}
+.bars__t small{font-weight:500;color:var(--fg-faint);letter-spacing:.06em}
+.bars__list{display:grid;gap:11px;margin-top:16px}
+.bar{display:grid;grid-template-columns:116px minmax(0,1fr) 72px;align-items:center;gap:12px;font-size:.8rem}
+.bar > span{color:var(--fg-dim)}
+.bar > b{font-family:var(--mono);font-size:.74rem;font-weight:600;text-align:right;color:var(--fg)}
+.bar__track{position:relative;height:10px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+.bar__track i{
+  position:absolute;left:0;top:0;bottom:0;width:max(var(--v,0) * 1%,6px);border-radius:99px;
+  background:linear-gradient(90deg,var(--blue),var(--blue-hi));transform-origin:0 50%;
+}
+.bar--mint .bar__track i{background:linear-gradient(90deg,#1fae80,var(--mint))}
+html.fx .bars .bar__track i{transform:scaleX(0);transition:transform 1.4s var(--ease-out) calc(var(--k,0) * 110ms)}
+html.fx .bars.seen .bar__track i{transform:none}
+@media (max-width:520px){
+  .bar{grid-template-columns:minmax(0,1fr) auto;gap:6px 10px}
+  .bar__track{grid-column:1 / -1;grid-row:2}
+}
+
+/* ---------- 8. Linha do tempo que se desenha ------------------------------- */
+.road__draw{
+  position:absolute;left:5px;width:2px;margin-left:-.5px;top:0;height:0;z-index:0;pointer-events:none;
+  background:linear-gradient(180deg,var(--blue-deep),var(--blue));border-radius:2px;
+  transform-origin:0 0;transform:scaleY(0);
+}
+.road__item::after{transition:background .4s var(--ease),transform .3s var(--ease-out),box-shadow .4s}
+.road__item.fx-lit::after{background:var(--blue-deep);box-shadow:0 0 0 4px rgba(27,107,255,.16)}
+
+/* ---------- 9. Retrato em íris (máscara circular) -------------------------- */
+html.fx .portrait__frame.fx-iris{
+  clip-path:circle(0% at 50% 40%);
+  transition:clip-path 1.5s var(--ease-out);
+}
+html.fx .portrait__frame.fx-iris.on{clip-path:circle(88% at 50% 40%)}
+
+/* ---------- 10. Painéis que se expandem (funções do conteúdo) -------------- */
+@media (hover:hover) and (pointer:fine) and (min-width:981px){
+  .goals{display:flex}
+  .goal{flex:1 1 0;min-width:0;transition:flex-grow .55s var(--ease-out),background .3s}
+  .goals:hover .goal{flex-grow:.82}
+  .goals .goal:hover{flex-grow:1.75;background:var(--ink-2)}
+  .goal svg{transition:transform .4s var(--ease-out)}
+  .goal:hover svg{transform:scale(1.25) rotate(-6deg)}
+}
+
+/* ---------- 11. Pilha de cartões (etapas, no celular) ---------------------- */
+#processo{overflow:hidden;overflow:clip}
+@media (max-width:760px){
+  #processo .steps{display:block;border-top:0;padding-bottom:6px}
+  #processo .step{
+    position:sticky;top:calc(var(--nav-h) + 12px + var(--k,0) * 13px);
+    margin-bottom:14px;padding:20px 18px;
+    background:var(--paper-2);border:1px solid var(--rule-ink-2);border-radius:var(--r-lg);
+    box-shadow:0 14px 34px -22px rgba(10,10,12,.5);
+    transform-origin:50% 0;
+    animation:none !important;
+    transition:opacity .6s var(--ease);
+  }
+  #processo .step:hover{padding-left:18px}
+  #processo .step.fx-under{pointer-events:none}
+}
+
+/* ---------- 12. Rede de partículas (topo) ---------------------------------- */
+.fx-net{
+  position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;
+  -webkit-mask-image:linear-gradient(180deg,#000 0,#000 58%,transparent 100%);
+  mask-image:linear-gradient(180deg,#000 0,#000 58%,transparent 100%);
+  opacity:0;transition:opacity 1.2s var(--ease) .3s;
+}
+.fx-net.on{opacity:.95}
+
+/* ---------- 13. Confete ---------------------------------------------------- */
+.fx-conf{position:fixed;inset:0;width:100%;height:100%;z-index:3100;pointer-events:none}
+
+/* ---------- Impressão: nada disso entra no PDF ----------------------------- */
+@media print{
+  .fx-cur,.fx-net,.fx-conf,.fx-gl{display:none !important}
+  html.fx .fx-w{opacity:1 !important}
+  html.fx .bars .bar__track i{transform:none !important}
+  html.fx .portrait__frame.fx-iris{clip-path:none !important}
+  .odo__r{transform:translateY(calc(var(--n) * -1.12em)) !important}
+  /* palavra de destaque que ainda não embaralhou (fora da tela) sai com a cor final */
+  .mark.fx-scr--pre{color:#0b3ba8 !important;-webkit-text-stroke-color:transparent !important}
+}

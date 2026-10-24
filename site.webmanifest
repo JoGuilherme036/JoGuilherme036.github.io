@@ -1,0 +1,15 @@
+{
+  "name": "JG Marketing — João Guilherme",
+  "short_name": "JG Marketing",
+  "description": "Conteúdo, design e presença digital para marcas que precisam aparecer e vender melhor.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0a0c",
+  "theme_color": "#0a0a0c",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "assets/jg-mark.webp", "sizes": "580x420", "type": "image/webp" }
+  ]
+}
